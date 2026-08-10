@@ -1,0 +1,156 @@
+---
+title: "Consulta de compras"
+description: "Consulta compras pagas e não pagas originadas a partir da webview Webmotors."
+---
+
+## Autenticação
+
+Todas as requisições devem incluir o token de acesso no header `Authorization` no formato `Bearer <token>`. Requisições sem token ou com token inválido retornam `401 Unauthorized`.
+
+```bash
+Authorization: Bearer <token_fornecido_pelo_baratao>
+```
+
+## Ambientes
+
+| Ambiente     | Base URL                                      |
+|--------------|-----------------------------------------------|
+| Produção     | `https://barataocombustiveis.com.br`          |
+| Homologação  | `https://baratao-homologacao.herokuapp.com`   |
+
+## Endpoint
+
+<ParamField query="GET" type="endpoint">
+  `/api/v1/external/webmotors/compras`
+</ParamField>
+
+### Parâmetros (query string)
+
+<ParamField query="data" type="string">
+  Data de referência no formato `DD-MM-AAAA`. Se omitido, assume o dia atual. Limitado a 1 dia por requisição.
+</ParamField>
+
+<ParamField query="efetuada" type="boolean">
+  Filtra pelo status do pagamento. `true` retorna apenas compras pagas, `false` apenas as não pagas. Se omitido, retorna ambos.
+</ParamField>
+
+## Exemplos de requisição
+
+<CodeGroup>
+
+```bash Produção
+curl --location \
+  'https://barataocombustiveis.com.br/api/v1/external/webmotors/compras?data=10-08-2026&efetuada=true' \
+  --header 'Authorization: Bearer <token_fornecido_pelo_baratao>'
+```
+
+```bash Homologação — compras pagas
+curl --location \
+  'https://baratao-homologacao.herokuapp.com/api/v1/external/webmotors/compras?data=10-08-2026&efetuada=true' \
+  --header 'Authorization: Bearer <token_fornecido_pelo_baratao>'
+```
+
+```bash Homologação — compras não pagas
+curl --location \
+  'https://baratao-homologacao.herokuapp.com/api/v1/external/webmotors/compras?data=10-08-2026&efetuada=false' \
+  --header 'Authorization: Bearer <token_fornecido_pelo_baratao>'
+```
+
+</CodeGroup>
+
+## Resposta
+
+<Tabs>
+  <Tab title="200 OK">
+    ```json
+    {
+      "data": "10-08-2026",
+      "total": 2,
+      "compras": [
+        {
+          "compra_id_webmotors": "wmr1abTsyX/UPhLo2x/pCojBTZbLm8A3P/bqvnUe4G76ekIg==--NUd7Eg/p0TIZ93es--imDGQxaHei4Q0g1+NNNurw==",
+          "compra_efetuada": true,
+          "payment_method": "PIX",
+          "valor_compra_cents": 15000,
+          "data_compra": "2026-08-10T10:32:14-03:00",
+          "created_at": "2026-08-10T10:30:02-03:00",
+          "cpf": "12345678900",
+          "email": "cliente@exemplo.com",
+          "nome": "Nome do Cliente"
+        }
+      ]
+    }
+    ```
+  </Tab>
+  <Tab title="401">
+    ```json
+    { "error": "Token ausente ou inválido." }
+    ```
+  </Tab>
+  <Tab title="422">
+    ```json
+    { "error": "Parâmetro 'data' inválido. Utilize o formato DD-MM-AAAA." }
+    ```
+  </Tab>
+  <Tab title="500">
+    ```json
+    { "error": "Indisponibilidade temporária do serviço." }
+    ```
+  </Tab>
+</Tabs>
+
+### Campos de `compras[]`
+
+<ResponseField name="compra_id_webmotors" type="string">
+  Identificador único da compra. Use este valor ao contatar o Baratão sobre uma compra específica.
+</ResponseField>
+
+<ResponseField name="compra_efetuada" type="boolean">
+  `true` se o pagamento foi confirmado, `false` caso contrário.
+</ResponseField>
+
+<ResponseField name="payment_method" type="string">
+  Meio de pagamento utilizado. Ex: `PIX`, `CCT`.
+</ResponseField>
+
+<ResponseField name="valor_compra_cents" type="integer">
+  Valor total da compra em centavos.
+</ResponseField>
+
+<ResponseField name="data_compra" type="string (ISO8601)">
+  Data/hora da confirmação do pagamento. `null` se ainda não paga.
+</ResponseField>
+
+<ResponseField name="created_at" type="string (ISO8601)">
+  Data/hora em que a compra foi criada.
+</ResponseField>
+
+<ResponseField name="cpf" type="string">
+  CPF do cliente.
+</ResponseField>
+
+<ResponseField name="email" type="string">
+  E-mail do cliente.
+</ResponseField>
+
+<ResponseField name="nome" type="string">
+  Nome do cliente.
+</ResponseField>
+
+## Erros
+
+| Status | Motivo |
+|--------|--------|
+| `401 Unauthorized` | Token ausente ou inválido. |
+| `422 Unprocessable Entity` | Parâmetro `data` ou `efetuada` em formato inválido. |
+| `500 Internal Server Error` | Indisponibilidade temporária do serviço. |
+
+## Observações
+
+<Note>
+  O intervalo de consulta é sempre limitado a **1 dia**. Para múltiplos dias, é necessário fazer uma requisição por dia.
+</Note>
+
+<Info>
+  O `compra_id_webmotors` é um identificador opaco, distinto do id interno do Baratão. Use-o como referência ao reportar dúvidas ou inconsistências sobre uma compra.
+</Info>
