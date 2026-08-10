@@ -1,0 +1,20 @@
+{
+  "name": "Baratão Combustíveis",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#E63946",
+    "light": "#FF6B6B",
+    "dark": "#C1121F"
+  },
+  "navigation": [
+    {
+      "group": "Webmotors",
+      "pages": ["api-reference/compras"]
+    }
+  ],
+  "footerSocials": {}
+}
