@@ -1,0 +1,27 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "Baratão Combustíveis",
+  "colors": {
+    "primary": "#E63946",
+    "light": "#FF6B6B",
+    "dark": "#C1121F"
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Geral",
+            "pages": ["introduction"]
+          },
+          {
+            "group": "Webmotors",
+            "pages": ["api-reference/compras"]
+          }
+        ]
+      }
+    ]
+  }
+}
