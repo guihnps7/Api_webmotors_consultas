@@ -40,7 +40,7 @@ Authorization: Bearer <token_fornecido_pelo_baratao>
 
 ```bash Produção
 curl --location \
-  'https://barataocombustiveis.com.br/api/v1/external/webmotors/compras?data=10-08-2026&efetuada=true' \
+  'https://baratao.herokuapp.com/api/v1/external/webmotors/compras?data=10-08-2026&efetuada=true' \
   --header 'Authorization: Bearer <token_fornecido_pelo_baratao>'
 ```
 
@@ -126,7 +126,7 @@ curl --location \
 </ResponseField>
 
 <ResponseField name="produto" type="string">
-  Produto.
+  Nome do produto.
 </ResponseField>
 
 <ResponseField name="estado" type="string">
