@@ -15,7 +15,7 @@ Authorization: Bearer <token_fornecido_pelo_baratao>
 
 | Ambiente     | Base URL                                      |
 |--------------|-----------------------------------------------|
-| Produção     | `https://barataocombustiveis.com.br`          |
+| Produção     | `https://baratao.herokuapp.com/`              |
 | Homologação  | `https://baratao-homologacao.herokuapp.com`   |
 
 ## Endpoint
@@ -123,6 +123,14 @@ curl --location \
 
 <ResponseField name="created_at" type="string (ISO8601)">
   Data/hora em que a compra foi criada.
+</ResponseField>
+
+<ResponseField name="produto" type="string">
+  Produto.
+</ResponseField>
+
+<ResponseField name="estado" type="string">
+  Estado.
 </ResponseField>
 
 <ResponseField name="cpf" type="string">
